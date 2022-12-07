@@ -1,23 +1,25 @@
 import fs, { watch } from "fs"
 import _ from "lodash"
 
-function part2(flatTree) {
-  const totalSpace = 70000000
-  const requiredSpace = 30000000
-  const usedSpace = 48381165
-  console.log(usedSpace-requiredSpace)
-  const valid = flatTree.filter(item => item > usedSpace - requiredSpace)
-  const smallest = valid.sort((a, b) => a - b)
-  console.log(smallest)
+function directorySize(tree, position) {
+  let size = 0
+  const positionObject = _.get(tree, position)
+  Object.keys(positionObject).forEach((item) => {
+    if (!isNaN(positionObject[item])) {
+      size += parseInt(positionObject[item])
+    } else {
+      size += directorySize(tree, position+`.${item}`)
+    }
+  })
+  return(size)
 }
 
-fs.readFile("input.txt", "utf-8", (err, data) => {
-  const lineData = data.split("\r\n")
+function getSizes(lines) {
   let treeMap = { "/": {} }
   let dir = []
   let directoryPositions = ["/"]
   _.set(treeMap, "/.a", {})
-  lineData.forEach((line) => {
+  lines.forEach((line) => {
     let parsedLine = line.split(" ")
     if (parsedLine[1] == "cd") {
       if (parsedLine[2] == "..") {
@@ -36,22 +38,23 @@ fs.readFile("input.txt", "utf-8", (err, data) => {
 
   let directoryValues = []
   directoryPositions.forEach((position) => {
-    let subDirectory = _.get(treeMap, position)
-    let flattenedDirectory = Object.assign(
-      {},
-      ...function _flatten(o) {
-        return [].concat(...Object.keys(o)
-          .map(k =>
-            typeof o[k] === 'object' ?
-              _flatten(o[k]) :
-              ({[k]: o[k]})
-          )
-        );
-      }(subDirectory)
-    )
-    let intValues = Object.values(flattenedDirectory).map(val => parseInt(val))
-    let total = intValues.reduce((a, b) => a + b)
-    directoryValues.push(total)
+    let dirSize = directorySize(treeMap, position)
+    directoryValues.push(dirSize)
   })
-  part2(directoryValues)
+  console.log(treeMap)
+  return(directoryValues)
+}
+
+function smallestDifference(fileSizes) {
+  const spaceNeeded = 40000000
+  const maxFile = fileSizes[0]
+  const filteredFiles = fileSizes.filter(file => file > maxFile - spaceNeeded)
+  const sortedFiles = filteredFiles.sort((a, b) => a-b)[0]
+  console.log(sortedFiles)
+}
+
+fs.readFile("input.txt", "utf-8", (err, data) => {
+  const lineData = data.split("\r\n")
+  const fileSizes = getSizes(lineData)
+  smallestDifference(fileSizes)
 })
