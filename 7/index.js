@@ -41,7 +41,6 @@ function getSizes(lines) {
     let dirSize = directorySize(treeMap, position)
     directoryValues.push(dirSize)
   })
-  console.log(treeMap)
   return(directoryValues)
 }
 
