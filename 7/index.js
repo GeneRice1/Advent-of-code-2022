@@ -1,4 +1,4 @@
-import fs, { watch } from "fs"
+import fs from "fs"
 import _ from "lodash"
 
 function directorySize(tree, position) {
