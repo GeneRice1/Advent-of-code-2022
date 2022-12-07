@@ -1,4 +1,4 @@
-This is a repo for my answers to the advent of code 2022 (javascript)
+# My advent of code answers (2022) 🎄
 
 Day 1 🟢🟢
 Day 2 🟢🟢
