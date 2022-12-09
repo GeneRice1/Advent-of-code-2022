@@ -50,9 +50,9 @@ function viewingDistance(treeMap, x, y) {
     })
   })
   directions.push(getDistance(treeMap[y], x))
-  directions.push(getDistance(treeMap[y].reverse(), treeMap.length - x - 1))
+  directions.push(getDistance([...treeMap[y]].reverse(), treeMap[y].length - x - 1))
   directions.push(getDistance(rotatedArray[x], y))
-  directions.push(getDistance(rotatedArray[x].reverse(), treeMap.length - y - 1))
+  directions.push(getDistance([...rotatedArray[x]].reverse(), treeMap[x].length - y - 1))
   return(directions.reduce((a, b) => a*b))
 }
 
