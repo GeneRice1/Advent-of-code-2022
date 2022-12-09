@@ -40,7 +40,7 @@ function getDistance(line, index) {
   return(distance)
 }
 
-function viewingDistance(treeMap, treeHeight, x, y) {
+function viewingDistance(treeMap, x, y) {
   let directions = []
   let rotatedArray = []
   treeMap.forEach((row) => {
@@ -76,7 +76,7 @@ fs.readFile("input.txt", "utf-8", (err, data) => {
     hiddenList.push([])
     row.forEach((tree, x) => {
       hiddenList[y].push(isHidden(treeMap, tree, x, y))
-      scenicScore.push(viewingDistance(treeMap, tree, x, y))
+      scenicScore.push(viewingDistance(treeMap, x, y))
     })
   })
   const visible = countVisible(hiddenList)

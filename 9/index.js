@@ -24,12 +24,17 @@ function newTail(headPos) {
   headPos.forEach((coord) => {
     let [tailX, tailY, headX, headY] = [tailPositions.at(-1)[0], tailPositions.at(-1)[1], coord[0], coord[1]]
     let newPos = []
-    if (Math.abs(tailX-headX) > 1) {
-      newPos = [tailX + (headX-tailX > 0 ? headX-tailX-1 : headX-tailX+1), tailY + (headY-tailY)]
-    } else if (Math.abs(tailY - headY) > 1) {
-      newPos = [tailX + (headX-tailX), tailY + (headY-tailY > 0 ? headY-tailY-1 : headY-tailY+1)]
+    if (Math.abs(tailX-headX) > 1 && Math.abs(tailY - headY) < 2) {
+      newPos = [tailX + (headX-tailX > 0 ? 1 : -1), tailY + (headY-tailY)]
+    } else if (Math.abs(tailY - headY) > 1 && Math.abs(tailX - headX) < 2) {
+      newPos = [tailX + (headX-tailX), tailY + (headY-tailY > 0 ? 1 : -1)]
+    } else if (Math.abs(tailX - headX) > 1 && Math.abs(tailY - headY) > 1) {
+      newPos = [tailX + (headX-tailX > 0 ? 1 : -1), tailY + (headY-tailY > 0 ? 1 : -1)]
     }
     if (newPos.length > 0) { tailPositions.push(newPos) }
+    if (Math.abs(Math.abs(coord[0])-Math.abs(tailPositions.at(-1)[0])) > 1 || Math.abs(Math.abs(coord[1])-Math.abs(tailPositions.at(-1)[1])) > 1) {
+      console.log(coord[0], tailPositions.at(-1)[0])
+    }
   })
   return(tailPositions)
 }
@@ -55,5 +60,5 @@ fs.readFile("input.txt", "utf-8", (err, data) => {
     lastPositions = newTail(lastPositions)
   }
   let flattenedPositions = lastPositions.map(item => JSON.stringify(item))
-  console.log(flattenedPositions.filter((item, i) => flattenedPositions.indexOf(item) == i))
+  console.log(flattenedPositions.filter((item, i) => flattenedPositions.indexOf(item) == i).length)
 })
